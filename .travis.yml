@@ -1,6 +1,8 @@
 language: node_js
-node:
-- stable
+node_js:
+  - "10"
+dist: trusty
+sudo: required
 install:
 - npm install -g @vue/cli
 before_script:
