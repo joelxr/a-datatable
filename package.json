@@ -8,7 +8,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "vue": "^2.5.17"
+    "d3": "^5.7.0",
+    "vue": "^2.5.20"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.2.0",
