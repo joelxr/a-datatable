@@ -174,7 +174,7 @@ export default {
      * This property can't be empty, it's required for this component.
      */
     loadCsvFile () {
-      d3.csv(`/${this.csvFile}.csv`, data => {
+      d3.csv(`${process.env.BASE_URL}${this.csvFile}.csv`, data => {
         this.tableData.push(data)
       })
     },
