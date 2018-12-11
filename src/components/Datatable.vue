@@ -139,6 +139,7 @@ export default {
   },
   data() {
     return {
+      
       /** Array to store acquired CSV data */
       tableData: [],
       /** Array to store user's current view when filters are applied. */
