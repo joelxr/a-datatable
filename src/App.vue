@@ -21,8 +21,8 @@ export default {
       columnProps: [
         { name: 'ID', type: 'text' },
         { name: 'Name', type: 'text' },
-        { name: 'Description', type: 'text' },
-        { name: 'Date', type: 'date' },
+        { name: 'Description', type: 'text', editable: true },
+        { name: 'Date', type: 'date', sorting: 'descending' },
         { name: 'Amount', type: 'amount' },
       ]
     }
@@ -35,7 +35,12 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  margin: 2em 8em;
+  padding: 0.8rem 2rem;
+}
+
+.datatable {
+  margin: 0 auto;
+  width: 60rem;
 }
 
 .title {

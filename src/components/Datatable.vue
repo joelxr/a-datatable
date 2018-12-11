@@ -8,12 +8,15 @@
       The properties of each column in order to be shown. 
       The first column should be the unique identifier
       for each row, an ID. It's an array of an object 
-      with the following attributes: name, type and
-      sorting (optional, can be ascending or descending).
+      with the following attributes:
+        - name,
+        - type,
+        - sorting (optional, can be ascending or descending),
+        - editable (optinial, true/false)
       For example: 
         columnProps: [
           { name: 'ID', type: 'text' },
-          { name: 'Description', type: 'text' },
+          { name: 'Description', type: 'text', editable: true },
           { name: 'Date', type: 'date', sorting: ascending },
           { name: 'Total', type: 'amount' }
         ]
@@ -78,7 +81,7 @@
       </thead>
       <tbody>
         <tr
-          v-for="row in filteredData"
+          v-for="(row, index) in filteredData"
           :key="row[columnProps[0].name]">
           <td
             v-for="n in columnsCount - 1"
@@ -86,7 +89,31 @@
             <div
               class="cell"
               :class="columnProps[n].type">
-              {{ parseValue(row, n) }}
+              <span v-if="columnProps[n].editable && editing[n][index]">
+                <textarea
+                  :value="row[columnProps[n].name]"
+                  @input="newValuesBuffer = $event.target.value"
+                  :class="columnProps[n].type">
+                </textarea>
+                <button
+                  class="save-button"
+                  @click="save(index, n); $set(editing[n], index, false)">
+                </button>
+                <button
+                  class="cancel-button"
+                  @click="$set(editing[n], index, false)">
+                </button>
+              </span>
+              <span v-else-if="columnProps[n].editable">
+                {{ parseValue(row, n) }}
+                <button
+                  class="edit-button"
+                  @click="$set(editing[n], index, true)">
+                </button>
+              </span>
+              <span v-else>
+                {{ parseValue(row, n) }}
+              </span>
             </div>
           </td>
         </tr>
@@ -112,20 +139,24 @@ export default {
   },
   data() {
     return {
+      /** Array to store acquired CSV data */
       tableData: [],
+      /** Array to store user's current view when filters are applied. */
       filteredData: [],
+      /** Sorting data for each column */
       sorting: [],
-      amountFilter: {
-        min: 0,
-        max: 1000000
-      },
-      dateFilter: {
-        min: '1950-01-01',
-        max: '2022-12-31'
-      }
+      /** Editing data for each cell */
+      editing: [],
+      /** A buffer to store editable fields value */
+      newValuesBuffer: '',
+      /** Initial filter to amount fields */
+      amountFilter: { min: 0, max: 1000 },
+      /** Initial filter to date fields */
+      dateFilter: { min: '2000-01-01', max: '2022-12-31' }
     }
   },
   computed: {
+    /** Counts how many columns are declared on columnProps */
     columnsCount () {
       return this.columnProps.length
     }
@@ -133,9 +164,14 @@ export default {
   created () {
     this.loadCsvFile()
     this.setupSorting()
+    this.setupEditing()
     this.filteredData = this.tableData
   },
   methods: {
+    /**
+     * Loads CSV file according by his name held by csvFile property.
+     * This property can't be empty, it's required for this component.
+     */
     loadCsvFile () {
       d3.csv(`/${this.csvFile}.csv`, data => {
         this.tableData.push(data)
@@ -143,6 +179,7 @@ export default {
     },
     /**
      * Parses a value according to the type of the column.
+     * Date and amount types are converted to locale string.
      */
     parseValue (row, n) {
       const rawValue = row[this.columnProps[n].name]
@@ -156,13 +193,37 @@ export default {
 
       return rawValue
     },
+    /**
+     * Initialize datatable's sorting values, when there is a sorting
+     * attribute in columnProps uses it, but when it hasn't uses
+     * ascending sort by default.
+     */
     setupSorting () {
-      this.columnProps.forEach(c => {
-        this.sorting.push(c.sorting ? c.sorting : 'descending')
+      this.columnProps.forEach((c, index) => {
+        if (c.sorting) {
+          this.$set(this.sorting, index, c.sorting)
+          this.sort(index)
+        } else {
+          this.$set(this.sorting, index, 'ascending')
+        }
       })
     },
     /**
-     * Toggles sorting order of nth column. 
+     * Initializes an array of editing data, is just a
+     * multidimesional array [columns x rows] that holds a
+     * boolean for each editable cell.
+     * Starts empty and goes true or false only in the fields
+     * edited by the user.
+     */
+    setupEditing () {
+      this.editing = new Array(this.columnsCount).fill(null).map(item => {
+        item = new Array(this.tableData.length).fill(null)
+        return item
+      }) 
+    },
+    /**
+     * Toggles sorting order of the nth column.
+     * "ascending" to "descending" or "descending" -> "ascending".
      */
     toggleSorting (n) {
       if (this.sorting[n] === 'ascending') {
@@ -177,7 +238,7 @@ export default {
     },
     /**
      * Sorts the nth column based on the informations that
-     * columnProps and sorting holds.
+     * columnProps and sorting array holds.
      */
     sort (n) {
       const property = this.columnProps[n].name
@@ -198,8 +259,14 @@ export default {
        this.filteredData.sort((data1, data2) => {
          return ascending ? data1[property] - data2[property] : data2[property] - data1[property]
        })
-      }
+      }    /**
+     * Filter method to field with type equals to "amount".
+     */
+
     },
+    /**
+     * Filter method to field with type equals to "text".
+     */
     filterText (n, text) {
       const property = this.columnProps[n].name
       const type = this.columnProps[n].type
@@ -208,9 +275,10 @@ export default {
       if (type === 'text') {
         this.filteredData = this.tableData.filter(data => regexp.test(data[property]))
       }
-
-      console.log(n, text, this.filteredData) // eslint-disable-line
     },
+    /**
+     * Filter method to field with type equals to "amount".
+     */
     filterAmount (n) {
       const property = this.columnProps[n].name
       const type = this.columnProps[n].type
@@ -222,6 +290,9 @@ export default {
         })
       }
     },
+    /**
+     * Filter method to field with type equals to "date".
+     */
     filterDate (n) {
       const property = this.columnProps[n].name
       const type = this.columnProps[n].type
@@ -234,6 +305,23 @@ export default {
             return value >= minDate && value <= maxDate
           })
       }
+    },
+    /**
+     * Saves the editables fields.
+     * After that, the newValuesBuffer is cleaned,
+     * filteredData is updated, filters are restarted.
+     * WARNING: This method does not save it to the CSV file,
+     * only to the loaded array "tableData".
+     */
+    save (index, column) {
+      let row = this.tableData[index]
+      row[this.columnProps[column].name] = this.newValuesBuffer
+      this.newValuesBuffer = ''
+      this.filteredData = this.tableData
+      this.amountFilter.min = 0
+      this.amountFilter.max = 1000
+      this.dateFilter.min = '2000-01-01'
+      this.dateFilter.max = '2022-12-31'
     }
   }
 };
@@ -245,7 +333,7 @@ export default {
   }
 
   .datatable tbody tr:hover {
-    background-color: #f2f6fc;
+    background-color: #ebeef5;
     transition: background-color .25s ease
   }
 
@@ -298,10 +386,10 @@ export default {
 
   .descending:after,
   .ascending:after {
-   content: ' ';
+    content: ' ';
     position: relative;
     left: 2px;
-   border: 8px solid transparent;
+    border: 8px solid transparent;
   }
 
   .descending:after {
@@ -319,12 +407,118 @@ export default {
     margin: 2px;
   }
 
+  .datatable th input {
+    height: 30px;
+    cursor: text;
+    width: 10rem;
+    color: #4e6e8e;
+    display: inline-block;
+    border: 1px solid #cfd4db;
+    border-radius: 2rem;
+    font-size: .9rem;
+    line-height: 2rem;
+    outline: none;
+    padding: 0 .5rem 0 .5rem;
+  }
+
   .datatable th input[type=number] {
-    width: 60px;
+    width: 4rem;
   }
 
 
   .datatable th input[type=date] {
-    width: 98px;
+    width: 8rem;
+  }
+
+  .datatable th input[type=text] {
+    padding: 0 .5rem 0 2rem;
+    transition: all .2s ease;
+    background: #fff url(/search.svg) .6rem .5rem no-repeat;
+    background-size: auto auto;
+    background-size: 1rem;
+  }
+
+  .datatable textarea {
+    display: block;
+    resize: vertical;
+    padding: 5px 15px;
+    line-height: 1.5;
+    box-sizing: border-box;
+    font-size: inherit;
+    color: #606266;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+  }
+
+  .datatable textarea:focus {
+    outline: none;
+    border-color: #409eff;
+  }
+
+  .datatable button {
+    display: inline-block;
+    position: relative;
+    top: -3px;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #dcdfe6;
+        border-top-color: rgb(220, 223, 230);
+        border-right-color: rgb(220, 223, 230);
+        border-bottom-color: rgb(220, 223, 230);
+        border-left-color: rgb(220, 223, 230);
+    border-color: #dcdfe6;
+    -webkit-appearance: none;
+    text-align: center;
+    box-sizing: border-box;
+    outline: none;
+    margin: 0;
+    transition: .1s;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    padding: 10px 14px;
+    border-radius: 4px;
+  }
+
+  .datatable button:focus,
+  .datatable button:hover {
+    color:#409eff;
+    border-color:#c6e2ff;
+    background-color:#ecf5ff
+  }
+
+  .datatable button.edit-button {
+    background: #fff url(/edit-outline.svg) 4px no-repeat;
+  }
+
+  .datatable button.save-button {
+    background: #fff url(/checkmark-outline.svg) 4px no-repeat;
+  }
+
+  .datatable button.cancel-button {
+    background: #fff url(/close-outline.svg) 4px no-repeat;
+  }
+
+  .datatable button.edit-button:hover {
+    color:#409eff;
+    border-color:#c6e2ff;
+    background:#ecf5ff url(/edit-outline.svg) 4px no-repeat;
+  }
+
+  .datatable button.save-button:hover {
+    color:#409eff;
+    border-color:#67c23a;
+    background:#67c23a url(/checkmark-outline.svg) 4px no-repeat;
+  }
+
+  .datatable button.cancel-button:hover {
+    color:#409eff;
+    border-color:#fbc4c4;
+    background:#f56c6c url(/close-outline.svg) 4px no-repeat;
   }
 </style>
