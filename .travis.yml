@@ -1,12 +1,10 @@
-sudo: false
 language: node_js
 node:
 - stable
 install:
 - npm install
-before_script:
-- npm ci
 script:
+- npm run test:unit
 - npm run build
 after_success:
 - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && bash
