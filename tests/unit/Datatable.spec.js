@@ -26,15 +26,9 @@ describe('Datatable.vue', () => {
         loadCsvFile () {
           return data
         }
-      },
-      data () {
-        return {
-          tableData: data
-        }
       }
     }
   )
-
 
   it ('expect to display the columns in order, starting by the 1st', () => {
     const columns = wrapper.findAll('.column-name')
@@ -63,11 +57,9 @@ describe('Datatable.vue', () => {
   })
 
   it ('expect to have given data from CSV', () => {
-    const rows = wrapper.findAll('.datatable')
-    console.log(rows) // eslint-disable-line
-    const row0 = rows.at(0)
-    console.log(row0) // eslint-disable-line
-    expect(row0.findAll('.cell').text()).equal('Luigi')
+  })
+
+  it ('expect to have edit option in editable columns', () => {
 
   })
 })
