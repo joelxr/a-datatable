@@ -3,7 +3,7 @@ set -o errexit -o nounset
 
 rev=$(git rev-parse --short HEAD)
 
-cd _site
+cd dist
 
 git init
 git config user.name "Joel Rocha"
