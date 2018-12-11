@@ -120,8 +120,8 @@ export default {
         max: 1000000
       },
       dateFilter: {
-        min: new Date("1950-01-01T03:24:00"),
-        max: new Date("2022-12-31T03:24:00")
+        min: '1950-01-01',
+        max: '2022-12-31'
       }
     }
   },
@@ -226,15 +226,14 @@ export default {
       const property = this.columnProps[n].name
       const type = this.columnProps[n].type
 
-      if (type === 'date') {
-        this.filteredData = this.tableData.filter(data => {
-          const value = new Date(data[property])
-          console.log(n, value, this.filteredData) // eslint-disable-line
-          return value >= this.dateFilter.min && value <= this.dateFilter.max
-        })
+      if (type === 'date' && this.dateFilter.min !== '' && this.dateFilter.max !== '') {
+        const minDate = new Date(this.dateFilter.min)
+        const maxDate = new Date(this.dateFilter.max)
+          this.filteredData = this.tableData.filter(data => {
+            const value = new Date(data[property])
+            return value >= minDate && value <= maxDate
+          })
       }
-
-      console.log(n, this.filteredData) // eslint-disable-line
     }
   }
 };
@@ -322,5 +321,10 @@ export default {
 
   .datatable th input[type=number] {
     width: 60px;
+  }
+
+
+  .datatable th input[type=date] {
+    width: 98px;
   }
 </style>
