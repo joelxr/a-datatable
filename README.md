@@ -96,9 +96,14 @@ export default {
 ## About the development
 
 ### Time spent on this
-I've spent about 15 hours to develope this componet, according to [this](https://wakatime.com/@7725b5b1-bd20-4130-b095-39086ed2e3f3/projects/wfcycoxewd?start=2018-12-06&end=2018-12-12) WakaTime report.
+I've spent about 15 hours to develop this componet, according to [this](https://wakatime.com/@7725b5b1-bd20-4130-b095-39086ed2e3f3/projects/wfcycoxewd?start=2018-12-06&end=2018-12-12) WakaTime report.
 
-### For the future
-
-
-### 
+### Next steps
+For future working, I would like to improve this component in the following aspects:
+  - Break the main component Datatable.vue in others components according to the column type, a Mixin will work too,
+  - More tests (unit and e2e),
+  - Improve even more the UI/UX,
+  - Responsive design
+  - Make it acessible, keyboard support,
+  - More data types for columns.
+  - More options to editable columns, at this moment only text can be edited.
