@@ -1,0 +1,33 @@
+{
+  "name": "Joel Xavier Rocha",
+  "age": "28",
+  "from": "Fortaleza/CE. Brazil",
+  "contactMe": {
+    "email": "joelxr@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/joelxr",
+    "github": "https://github.com/joelxr"
+  },
+  "aboutMe": "8+ years of software development and analysis, today I work at the municipal Bureau of Finance as technical analyst where we build, implement and support solutions to the city of Fortaleza.",
+  "education": [
+    {
+      "description": "Degree in Computer Engineer at Federal Institute of Education, Science and Technology of Ceará",
+      "started": "2008-08",
+      "finished": "2015-08"
+    },
+    {
+      "description": "Java Standard Edition 6 Programmer",
+      "started": "2016-07"
+    },
+    {
+      "description": "Udemy, ude.my/UC-I9OQPCKI.",
+      "started": "2017-04"
+    },
+    {
+      "description": "MongoDB University, goo.gl/WQy24D.",
+      "started": "2017-07"
+    }
+  ],
+  "skills": [
+    "Java EE", "JPA", "EJB", "JasperRepots", "Android", "Hibernate", "VRaptor", "JUnit", "Mockito", "Powermock", "IBM Websphere", "JBoss", "Wildfly", "Ant", "Maven", "Gradle", "Sonar", "PMD", "NodeJS", "NPM", "Express", "Oracle", "SQL Server", "MySQL", "SQLite", "MongoDB", "HTML5", "CSS", "Bulma", "Twitter's Bootstrap", "Materialize CSS", "SASS", "Less", "Javascript", "ECMA6", "jQuery", "Grunt", "Gulp", "Browserify", "Webpack", "Vue.js", "vue-cli", "Angular", "AngularJS", "pdfkit", "Cypress", "Mocha", "Git", "SVN", "CVS", "Jenkins", "Travis CI", "Gitlab", "Linux", "Bash", "Zsh"
+  ]
+}
