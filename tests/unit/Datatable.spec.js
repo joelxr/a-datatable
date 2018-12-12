@@ -13,24 +13,15 @@ describe('Datatable.vue', () => {
     { name: 'Amount', type: 'amount' },
   ]
 
-  const data = [
-    { ID: 1, Name: 'Luigi', Description: 'Luigis payment', Date: '2018-12-12', Amount: 100 },
-    { ID: 2, Name: 'Albert', Description: 'Albert paid the rent', Date: '2018-12-01', Amount: 3100.5 }
-  ]
-
   const wrapper = mount (
     Datatable,
     {
       propsData: { csvFile, columnProps },
       methods: {
-        loadCsvFile () {
-          return data
-        }
+        loadCsvFile () { }
       }
     }
   )
-
-  wrapper.setData({ tableData: data })
 
   it ('expect to display the columns in order, starting by the 1st', () => {
     const columns = wrapper.findAll('.column-name')

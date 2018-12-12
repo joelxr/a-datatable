@@ -37,6 +37,7 @@
             v-for="n in columnsCount - 1"
             :key="n">
             <div
+              :id="`${columnProps[n].name}Column`"
               class="column-name"
               :class="sorting[n]"
               @click="toggleSorting(n)">
@@ -91,27 +92,35 @@
               :class="columnProps[n].type">
               <span v-if="columnProps[n].editable && editing[n][index]">
                 <textarea
+                  :id="`${columnProps[n].name}-${index}-Edit`"
                   :value="row[columnProps[n].name]"
                   @input="newValuesBuffer = $event.target.value"
                   :class="columnProps[n].type">
                 </textarea>
                 <button
+                  :id="`${columnProps[n].name}-${index}-SaveButton`"
                   class="save-button"
                   @click="save(index, n); $set(editing[n], index, false)">
                 </button>
                 <button
+                  :id="`${columnProps[n].name}-${index}-CancelButton`"
                   class="cancel-button"
                   @click="$set(editing[n], index, false)">
                 </button>
               </span>
-              <span v-else-if="columnProps[n].editable">
+              <span
+                :id="`${columnProps[n].name}-${index}-Cell`"
+                v-else-if="columnProps[n].editable">
                 {{ parseValue(row, n) }}
                 <button
+                  :id="`${columnProps[n].name}-${index}-EditButton`"
                   class="edit-button"
                   @click="$set(editing[n], index, true)">
                 </button>
               </span>
-              <span v-else>
+              <span
+                v-else
+                :id="`${columnProps[n].name}-${index}-Cell`">
                 {{ parseValue(row, n) }}
               </span>
             </div>
@@ -139,7 +148,6 @@ export default {
   },
   data() {
     return {
-      
       /** Array to store acquired CSV data */
       tableData: [],
       /** Array to store user's current view when filters are applied. */
