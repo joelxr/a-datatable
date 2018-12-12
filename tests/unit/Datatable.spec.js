@@ -30,6 +30,8 @@ describe('Datatable.vue', () => {
     }
   )
 
+  wrapper.setData({ tableData: data })
+
   it ('expect to display the columns in order, starting by the 1st', () => {
     const columns = wrapper.findAll('.column-name')
     expect(columns.at(0).text()).equal('Name')
@@ -54,12 +56,5 @@ describe('Datatable.vue', () => {
     expect(columns.at(1).classes()).contains('ascending')
     expect(columns.at(2).classes()).contains('descending')
     expect(columns.at(3).classes()).contains('ascending')
-  })
-
-  it ('expect to have given data from CSV', () => {
-  })
-
-  it ('expect to have edit option in editable columns', () => {
-
   })
 })

@@ -494,32 +494,32 @@ export default {
   }
 
   .datatable button.edit-button {
-    background: #fff url(/edit-outline.svg) 4px no-repeat;
+    background: #fff url(../assets/icons/edit-outline.svg) 4px no-repeat;
   }
 
   .datatable button.save-button {
-    background: #fff url(/checkmark-outline.svg) 4px no-repeat;
+    background: #fff url(../assets/icons/checkmark-outline.svg) 4px no-repeat;
   }
 
   .datatable button.cancel-button {
-    background: #fff url(/close-outline.svg) 4px no-repeat;
+    background: #fff url(../assets/icons/close-outline.svg) 4px no-repeat;
   }
 
   .datatable button.edit-button:hover {
     color:#409eff;
     border-color:#c6e2ff;
-    background:#ecf5ff url(/edit-outline.svg) 4px no-repeat;
+    background:#ecf5ff url(../assets/icons/edit-outline.svg) 4px no-repeat;
   }
 
   .datatable button.save-button:hover {
     color:#409eff;
     border-color:#67c23a;
-    background:#67c23a url(/checkmark-outline.svg) 4px no-repeat;
+    background:#67c23a url(../assets/icons/checkmark-outline.svg) 4px no-repeat;
   }
 
   .datatable button.cancel-button:hover {
     color:#409eff;
     border-color:#fbc4c4;
-    background:#f56c6c url(/close-outline.svg) 4px no-repeat;
+    background:#f56c6c url(../assets/icons/close-outline.svg) 4px no-repeat;
   }
 </style>
